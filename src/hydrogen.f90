@@ -41,7 +41,7 @@ contains
     call kinetic_matrix(l, alpha, n_b, K, status)
     if (status /= 0) return
 
-    call coulomb_matrix(l, alpha, n_b, V, status)
+    call potential_matrix(l, alpha, n_b, V, status)
     if (status /= 0) return
 
     H(:, :) = K(:, :) + V(:, :)

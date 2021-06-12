@@ -127,7 +127,7 @@ contains
 
     ! in-lining integrate() for compactness
     double precision function intg (f)
-      double precision , intent(in) :: f
+      double precision , intent(in) :: f(n_r)
       intg = integrate(n_r, r_weights, f(:))
     end function intg
 
