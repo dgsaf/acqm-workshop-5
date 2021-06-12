@@ -1,0 +1,89 @@
+ energy,nze,natop,nps,alpha:                 16.000     -1      0      5  0.500
+ nunit,nnbtop,nent,ifirst,nold,theta:      2      5      1      1      1  0.500
+ nq,qcut,rmax,slowe:                      -1    8.0  100.0    2.0
+ (nk(j),sk(j),j=1,4)        14   0.90     22   3.00      4   4.00     10   0.20
+
+
+
+Warning: NR had to be reduced to NMAXR
+DR, RMAX and NR:    6.54167E-02    65.4167  1000
+ Defining eigenstates to nnbtop:  5
+  l  n   rn                    e(eV)    |<phi|phi>|**2
+  0  1   352       -87.1  -13.60579967    1.00000465  open  
+  0  2   704     82237.3   -3.40144992    1.00000036  open  
+  0  3  1000     97482.5   -1.51175559    0.99999923  open  
+  0  4  1000    102818.4   -0.85036248    0.99999553  open  
+  0  5  1000    105288.1   -0.54423201    0.99366522  open  
+ Defining pseudostates with NPS:  5 and ALPHA = LAMBDA / 2: 0.500
+ ALPHA redefined to be:  0.605771 after 14 iterations
+  l  n   rn                    e(eV)    |<phi|phi>|**2  projection
+  0  1   876       -82.7  -13.60524559    1.00000310    0.99999452  open   +
+  0  2   872     82237.3   -3.40144324    0.99999982    1.00000024  open   +
+  0  3   972     98818.2   -1.34619105    0.99999976    0.96197385  open   +
+  0  4   991    125813.9    1.99999273    0.99999923    0.00000000  open   +
+  0  5   995    315134.1   25.46678543    1.00006127    0.00000000  closed +
+
+ Number of states and max number of channels:  5  5
+ Total energy of the collision system:   2.3948 eV (  0.1760 Ryd )
+ electron scattering on H I    1S at    16.0000 eV (  1.1760 Ryd )
+ Kgrid quadrature set
+ interval  points    start       stop          test
+    1        14    0.000000    0.884421      0.62895
+    2        10    0.884421 *  1.284421      0.21801
+    3        22    1.284421    3.000000      0.14697
+    4         4    3.000000       oo         0.00609
+ fall off power:  4.0                      = 1.00001
+ State, NCH, NA, LA, L, K, EA:  1S   1   1   0   0    1.08442E+00   -9.99959E-01
+  1S   2S   3S   4S   5S 
+ 1.00 1.00 1.00 1.00 1.00
+
+ interval  points    start       stop          test
+    1        14    0.000000    0.452694      0.83875
+    2        10    0.452694 *  0.852694      0.05899
+    3        22    0.852694    3.000000      0.10136
+    4         4    3.000000       oo         0.00089
+ fall off power:  4.0                      = 1.00000
+ State, NCH, NA, LA, L, K, EA:  2S   2   2   0   0    6.52694E-01   -2.50000E-01
+  1S   2S   3S   4S   5S 
+ 1.00 1.00 1.00 1.00 1.00
+
+ interval  points    start       stop          test
+    1        14    0.000000    0.324359      0.53865
+    2        10    0.324359 *  0.724359      0.37381
+    3        22    0.724359    3.000000      0.08677
+    4         4    3.000000       oo         0.00077
+ fall off power:  4.0                      = 1.00000
+ State, NCH, NA, LA, L, K, EA:  3S   3   3   0   0    5.24359E-01   -9.89424E-02
+  1S   2S   3S   4S   5S 
+ 1.00 1.00 1.00 1.00 1.00
+
+ interval  points    start       stop          test
+    1        10    0.000000 *  0.340671      0.16962
+    2        14    0.340671    0.900000      0.50621
+    3        22    0.900000    3.000000      0.32383
+    4         4    3.000000       oo         0.00034
+ fall off power:  4.0                      = 1.00000
+ State, NCH, NA, LA, L, K, EA:  4S   4   4   0   0    1.70336E-01    1.46996E-01
+  1S   2S   3S   4S   5S 
+ 1.00 1.00 1.00 1.00 1.00
+
+ interval  points    start       stop          test
+    1        14    0.000000    0.900000      0.26853
+    2        22    0.900000    3.000000      0.61797
+    3         4    3.000000       oo         0.11377
+ fall off power:  4.0                      = 1.00027
+ State, NCH, NA, LA, L, E:      5S   5   5   0   0   -1.69575E+00    closed
+  1S   2S   3S   4S   5S 
+ 1.00 1.00 1.00 1.00 1.00
+
+ JS f i  real(T)   imag(T)    real(S)   imag(S)      V         K     eigenphase
+ 0+ 1 1-1.213E-01-1.061E-01  2.770E-01 8.266E-01 -3.249E-01-1.623E-01   0.626
+ 0+ 2 1-7.162E-02 2.502E-02  1.323E-01 3.786E-01 -4.068E-02-1.785E-01  -0.816
+ 0+ 3 1-4.349E-02 1.976E-02  9.364E-02 2.060E-01 -6.144E-02-2.176E-01  -1.324
+ 0+ 4 1 5.527E-02 2.798E-02  7.556E-02-1.493E-01 -2.700E-01-9.436E-02   0.112
+ N=  240 eigenphase sum: -1.401
+ 0- 1 1-7.067E-02-2.749E-01 -8.733E-01 4.815E-01 -1.399E-01-1.138E+00   1.319
+ 0- 2 1-8.361E-03-1.035E-02 -5.472E-02 4.419E-02  2.093E-01-5.596E-02  -0.399
+ 0- 3 1-2.077E-04-4.301E-03 -2.038E-02 9.839E-04  1.691E-01-2.747E-02   0.813
+ 0- 4 1-1.423E-03 2.710E-03  7.317E-03 3.844E-03  4.788E-01 1.465E-02   0.123
+ N=  240 eigenphase sum:  1.856

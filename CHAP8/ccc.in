@@ -1,0 +1,33 @@
+16.0,-1,0,5,0.5            ENERGY, NZE, NATOP, NPS, ALPHA
+2,5,1,1,1,0.0              NUNIT, NNBTOP, NENT, IFIRST, NOLD, THETA
+-1,8.0,100.0,2.0           NQM, QCUT, RMAX, SLOWE
+14,0.9,22,3.0,4,4.0,10,0.2 (NK(I),SK(I),I=1,4) K grid parameters
+
+This is the input file ccc.in
+ENERGY is the projectile energy in eV
+NZE    is the charge on the projectile, -1 for electrons and 1 for positrons
+NATOP  if positive, is the number of states to be coupled
+       If negative, then only open channels will be used.
+       If zero then all of the states generated with NPS below will be used
+NPS    is the size of the Laguerre basis
+ALPHA  is the corresponding exponential fall-off factor, lambda = alpha * 2.0
+NUNIT  is 1 for the totalcs file having cross sections in a0**2,
+       is 2 for the totalcs file having cross sections in pi a0**2, and
+       is 3 for the totalcs file having cross sections in cm**2
+       is 0 for this file not being created
+NNBTOP principle quantum number of eigenstates used to form the overlaps
+       with the pseudostates. 
+NENT   Number of incident channels for which the data is to be calculated
+IFIRST is 0 for direct only, and 1 with exchange
+NOLD   0 for exact states, 1 for pseudostates
+THETA  0.0 for old form of equations, > 0.0 (typically 1.0) for new form
+NQM    is -1 for full k-grid, 1 for a UBA run
+QCUT   largest value of k such that sin(k*r) can be integrated reliably
+RMAX   largest value of r
+SLOWE  if non-zero then the ALPHA is adjusted so that one of the pseudostate
+       energies comes out to be SLOWE
+14,0.9,22,3.0,4,4.0,10,0.2 (NK(I),SK(I),I=1,4) K grid parameters
+K grid parameters as above imply 10 points within 0.2 of the channel on-shell 
+       point, 14 points spread between 0.0 and 0.9, 22 points between 
+       0.9 and 3.0, and 4 points after 3.0 with
+       a transformation that assumes fall off as 1/k**4.0. 

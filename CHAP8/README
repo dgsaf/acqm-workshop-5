@@ -1,0 +1,102 @@
+                 README file for CCC code
+                 ========================
+Program published as
+@book{BS96,
+         AUTHOR = "Igor Bray and Andris T. Stelbovics",
+         TITLE  = "Momentum-Space Convergent-Close-Coupling Method
+                  for a Model {e-H} Scattering Problem",
+     Booktitle  = "{Computational Atomic Physics}",
+        editor  = "K. Bartschat",
+      Pages     = "161--180",
+      Publisher = "Springer",
+       address  = "(Heidelberg, New York)",
+         Year   = "1996"}
+
+
+The CCC code consists of the following files with specified purposes:
+
+ccc.f:       calls routine to read the input from file ccc.in. Generates
+             exact target discrete states and pseudostates. Makes plane
+             waves, calls V-matrix element routine, calls routine
+             to solve the coupled equations.
+
+iqpackd.f:   a very useful self-contained package for generating quadratures.
+
+lapack.f:    LAPACK routines for solving linear equations.
+
+par.f:       "included" parameter file determining the maximum number of 
+             radial points, k-quadrature points, and maximum number of states.
+
+Compilation: Create an executable program ccc by compiling the 
+============ program segments ccc.f, iqpackd.f and lapack.f
+
+             A typical command for unix-based compilers would be
+
+                   f77 -o ccc  ccc.f iqpackd.f lapack.f
+
+             Optimization is recommended; on some machines it may
+             be necessary to suppress underflow warnings.
+
+             The equivalent sequence on a Vax under VMS would be
+
+                 for ccc.f
+                 for iqpackd.f
+                 for lapack.f
+                 link ccc,iqpackd,lapack
+    Note:
+    ===== a) Some compiler may give warnings of the kind:
+             "Character or Hollerith constant continued across lines; 
+             may be non-portable". These may be ignored. 
+          b) There may also be warnings regarding
+             passing of unused arguments to routines. This
+             is due to the fact that the code is a reduced version of
+             a very large CCC code, and I decided that it is safer to
+             leave the arguments much as they were. The code has been tested
+             on IBM, DEC, HP, and SUN systems.
+
+Execution:   Typical command:
+==========
+                ccc < ccc.in > ccc.out
+
+input:       ccc.in  (The input files book.in, kgrid1.in, and kgrid2.in
+                      should be copied to a file ccc.in before running.)
+
+output:      ccc.out (This may be named differently in the above command.) 
+
+A successful run will create the following additional output files:
+
+totalcs:     contains total cross sections
+
+singlet.n1:  singlet half-off-shell K- and V- matrix elements for channel n.
+
+triplet.n1:  triplet half-off-shell K- and V- matrix elements for channel n.
+
+examples:
+
+book.in:     is a sample ccc.in file that is given in the text with
+             the corresponding output.
+             
+kgrid1.in:   is a sample ccc.in that corresponds to a static exchange
+             calculation with theta = 0. It was used to generate the
+             results corresponding to the upright triangles on the
+             left side of figure 1.
+             
+kgrid2.in:   is a sample ccc.in that corresponds to a static exchange
+             calculation with theta = 0. It was used to generate the
+             results corresponding to the inverted triangles on the
+             left side of figure 1. The two files only differ in the
+             choices for the k-grids in the last interval.
+             
+All the best,
+
+Igor.
+
+28/Sep/1995.
+---------------------------------------------------------------------
+Igor Bray, ARC Australian Professorial Fellow,                _--_|\ 
+Physics and Energy Studies,                                  /      \
+School of Mathematical and Physical Sciences,                *_.--._/
+Murdoch University,             phone(fax): +61 8 9360 6443(6183)  v
+90 South Street, Murdoch,       mailto:I.Bray@murdoch.edu.au           
+Perth, Western Australia, 6150  http://atom.murdoch.edu.au/
+---------------------------------------------------------------------
