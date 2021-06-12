@@ -33,6 +33,9 @@ contains
       return
     end if
 
+    ! initialise V_direct
+    V_direct(:, :) = 0d0
+
     ! cache product of wavefunctions
     g(:) = wf_i(:) * wf_f(:)
 
@@ -89,6 +92,9 @@ contains
       status = 1
       return
     end if
+
+    ! initialise V_exchange
+    V_exchange(:, :) = 0d0
 
     ! cache one-electron potential
     v(:) = - 1d0 / r_grid(:)
