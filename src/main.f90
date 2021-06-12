@@ -265,7 +265,7 @@ subroutine write_output (n_k, k_grid, i_i, i_f, V_direct, V_exchange, &
   close(io_unit)
 
   ! write on-shell direct
-  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.dir.os.txt"
+  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.dir.on.txt"
 
   open(unit=io_unit, file=trim(adjustl(io_file)), action="write", iostat=status)
 
@@ -283,7 +283,7 @@ subroutine write_output (n_k, k_grid, i_i, i_f, V_direct, V_exchange, &
   close(io_unit)
 
   ! write on-shell exchange
-  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.exc.os.txt"
+  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.exc.on.txt"
 
   open(unit=io_unit, file=trim(adjustl(io_file)), action="write", iostat=status)
 
