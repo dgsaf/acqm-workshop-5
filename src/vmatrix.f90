@@ -43,8 +43,6 @@ contains
     do ii = 1, n_k
       k_i(:) = sin(k_grid(ii) * r_grid(:))
       do ff = 1, n_k
-        f(:) = sin(k_grid(ff) * r_grid(:)) * k_i(:)
-
         V_direct(ff, ii) = two_e_integral(n_r, r_grid, r_weights, &
             sin(k_grid(ff) * r_grid(:)) * k_i(:), g)
       end do
@@ -55,15 +53,58 @@ contains
       do ii = 1, n_k
         k_i(:) = sin(k_grid(ii) * r_grid(:))
         do ff = 1, n_k
-          f(:) = sin(k_grid(ff) * r_grid(:)) * k_i(:)
-
           V_direct(ff, ii) = V_direct(ff, ii) &
-              - integrate(n_r, r_weights, f(:) / r_grid(:))
+              - integrate(n_r, r_weights, &
+              (sin(k_grid(ff) * r_grid(:)) * k_i(:)) / r_grid(:))
         end do
       end do
     end if
 
   end subroutine direct_matrix
+
+  ! direct_matrix
+  !
+  ! Potential direct matrix elements for given ki, kf.
+  ! Note:
+  ! - delta_i_f indicates if i==f
+  subroutine direct_matrix_element (n_r, r_grid, r_weights, &
+      delta_i_f, wf_i, wf_f, ki, kf, V_direct, status)
+    integer , intent(in) :: n_r
+    double precision , intent(in) :: r_grid(n_r)
+    double precision , intent(in) :: r_weights(n_r)
+    logical , intent(in) :: delta_i_f
+    double precision , intent(in) :: wf_i(n_r)
+    double precision , intent(in) :: wf_f(n_r)
+    double precision , intent(in) :: ki
+    double precision , intent(in) :: kf
+    double precision , intent(out) :: V_direct
+    integer , intent(out) :: status
+    ! local variables
+    double precision :: f(n_r), g(n_r)
+    double precision :: k_i(n_r), k_f(n_r)
+    integer :: ii, ff
+
+    ! check if arguments are valid
+    if (n_r < 1) then
+      status = 1
+      return
+    end if
+
+    ! cache product of wavefunctions
+    g(:) = wf_i(:) * wf_f(:)
+
+    ! determine direct matrix elements numerically
+    k_i(:) = sin(ki * r_grid(:))
+    V_direct = two_e_integral(n_r, r_grid, r_weights, &
+        sin(kf * r_grid(:)) * k_i(:), g)
+
+    ! if i == f, then subtract (1/r) term
+    if (delta_i_f) then
+      V_direct = V_direct - &
+          integrate(n_r, r_weights, (sin(kf * r_grid(:)) * k_i(:)) / r_grid(:))
+    end if
+
+  end subroutine direct_matrix_element
 
   ! exchange_matrix
   !
@@ -108,7 +149,7 @@ contains
         kf = k_grid(ff)
         k_f(:) = sin(kf * r_grid(:))
 
-        a = (energy - (0d5 * ((kf ** 2) + (ki ** 2)))) &
+        a = (energy - (0.5d0 * ((kf ** 2) + (ki ** 2)))) &
             * intg(k_f(:) * wf_i(:)) * intg(wf_f(:) * k_i(:))
 
         b = - intg(k_f(:) * v(:) * wf_i(:)) * intg(wf_f(:) * k_i(:))
@@ -132,6 +173,61 @@ contains
     end function intg
 
   end subroutine exchange_matrix
+
+  ! exchange_matrix_element
+  !
+  ! Potential exchange matrix element for given ki, kf
+  subroutine exchange_matrix_element (n_r, r_grid, r_weights, &
+      energy, wf_i, wf_f, ki, kf, V_exchange, status)
+    integer , intent(in) :: n_r
+    double precision , intent(in) :: r_grid(n_r)
+    double precision , intent(in) :: r_weights(n_r)
+    double precision , intent(in) :: energy
+    double precision , intent(in) :: wf_i(n_r)
+    double precision , intent(in) :: wf_f(n_r)
+    double precision , intent(in) :: ki, kf
+    double precision , intent(out) :: V_exchange
+    integer , intent(out) :: status
+    ! local variables
+    double precision :: v(n_r)
+    double precision :: a, b, c, d
+    double precision :: k_i(n_r), k_f(n_r)
+    integer :: ii, ff
+
+    ! check if arguments are valid
+    if (n_r < 1) then
+      status = 1
+      return
+    end if
+
+    ! cache one-electron potential
+    v(:) = - 1d0 / r_grid(:)
+
+    ! determine exchange matrix elements numerically
+    k_i(:) = sin(ki * r_grid(:))
+    k_f(:) = sin(kf * r_grid(:))
+
+    a = (energy - (0.5d0 * ((kf ** 2) + (ki ** 2)))) &
+        * intg(k_f(:) * wf_i(:)) * intg(wf_f(:) * k_i(:))
+
+    b = - intg(k_f(:) * v(:) * wf_i(:)) * intg(wf_f(:) * k_i(:))
+
+    c = - intg(k_f(:) * wf_i(:)) * intg(wf_f(:) * v(:) * k_i(:))
+
+    d = - two_e_integral(n_r, r_grid, r_weights, &
+        k_f(:) * wf_i(:), k_i(:) * wf_f(:))
+
+    V_exchange = a + b + c + d
+
+  contains
+
+    ! in-lining integrate() for compactness
+    double precision function intg (f)
+      double precision , intent(in) :: f(n_r)
+      intg = integrate(n_r, r_weights, f(:))
+    end function intg
+
+  end subroutine exchange_matrix_element
 
   ! two_e_integral
   !

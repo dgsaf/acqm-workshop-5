@@ -33,6 +33,10 @@ program main
   double precision , allocatable :: V_direct(:, :)
   double precision , allocatable :: V_exchange(:, :)
 
+  ! v-matrix on-shell elements
+  double precision , allocatable :: on_direct(:, :)
+  double precision , allocatable :: on_exchange(:, :)
+
   ! local variables
   integer :: status
   integer :: i_r, i_k, i_f, i_i
@@ -88,6 +92,9 @@ program main
   allocate(V_direct(n_k, n_k))
   allocate(V_exchange(n_k, n_k))
 
+  allocate(on_direct(n_k, 2))
+  allocate(on_exchange(n_k, 2))
+
   ! setup radial grid and weights
   write (*, *) "[debug] setting up radial grid and weights"
 
@@ -133,12 +140,18 @@ program main
         n_k, k_grid, V_exchange, status)
     if (status /= 0) call exit(status)
 
-    ! calculate analytic v-matrix elements
+    ! calculate analytic on-shell v-matrix elements
+    write (*, *) "[debug] calculating on-shell elements"
+
+    call on_elements(n_r, r_grid, r_weights, n_k, k_grid, n_b, wf, energies, &
+        i_f, on_direct, on_exchange, status)
+    if (status /= 0) call exit(status)
 
     ! write v-matrix elements to file
     write (*, *) "[debug] writing output"
 
-    call write_output(n_k, k_grid, i_i, i_f, V_direct, V_exchange, status)
+    call write_output(n_k, k_grid, i_i, i_f, V_direct, V_exchange, &
+        on_direct, on_exchange, status)
     if (status /= 0) call exit(status)
   end do
 
@@ -148,6 +161,8 @@ end program main
 
 ! read_input
 subroutine read_input (l, alpha, n_b, d_r, r_max, d_k, k_max, energy, status)
+  implicit none
+
   integer , intent(out) :: l
   double precision , intent(out) :: alpha
   integer , intent(out) :: n_b
@@ -191,13 +206,18 @@ subroutine read_input (l, alpha, n_b, d_r, r_max, d_k, k_max, energy, status)
 end subroutine read_input
 
 ! write_output
-subroutine write_output (n_k, k_grid, i_i, i_f, V_direct, V_exchange, status)
+subroutine write_output (n_k, k_grid, i_i, i_f, V_direct, V_exchange, &
+    on_direct, on_exchange, status)
+  implicit none
+
   integer , intent(in) :: n_k
   double precision , intent(in) :: k_grid(n_k)
   integer , intent(in) :: i_i
   integer , intent(in) :: i_f
   double precision , intent(in) :: V_direct(n_k, n_k)
   double precision , intent(in) :: V_exchange(n_k, n_k)
+  double precision , intent(in) :: on_direct(n_k, 2)
+  double precision , intent(in) :: on_exchange(n_k, 2)
   integer , intent(out) :: status
   ! local variables
   integer , parameter :: io_unit = 10
@@ -205,7 +225,7 @@ subroutine write_output (n_k, k_grid, i_i, i_f, V_direct, V_exchange, status)
   integer :: ii, jj
 
   ! write direct matrix elements
-  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.direct.txt"
+  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.dir.txt"
 
   open(unit=io_unit, file=trim(adjustl(io_file)), action="write", iostat=status)
 
@@ -225,7 +245,7 @@ subroutine write_output (n_k, k_grid, i_i, i_f, V_direct, V_exchange, status)
   close(io_unit)
 
   ! write exchange matrix elements
-  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.exchange.txt"
+  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.exc.txt"
 
   open(unit=io_unit, file=trim(adjustl(io_file)), action="write", iostat=status)
 
@@ -244,4 +264,131 @@ subroutine write_output (n_k, k_grid, i_i, i_f, V_direct, V_exchange, status)
 
   close(io_unit)
 
+  ! write on-shell direct
+  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.dir.os.txt"
+
+  open(unit=io_unit, file=trim(adjustl(io_file)), action="write", iostat=status)
+
+  if (status /= 0) then
+    write (*, *) "[error] ", trim(adjustl(io_file)), " could not be opened"
+    return
+  end if
+
+  write (io_unit, *) "# k_grid(ii), on_direct(ii, 1), on_direct(ii, 2)"
+  write (io_unit, *) "#           , calculated      , analytic        "
+  do ii = 1, n_k
+    write (io_unit, *) k_grid(ii), on_direct(ii, 1), on_direct(ii, 2)
+  end do
+
+  close(io_unit)
+
+  ! write on-shell exchange
+  write (io_file, "(a,i1,a,i1,a)") "data/output/",i_i,"s_",i_f,"s.exc.os.txt"
+
+  open(unit=io_unit, file=trim(adjustl(io_file)), action="write", iostat=status)
+
+  if (status /= 0) then
+    write (*, *) "[error] ", trim(adjustl(io_file)), " could not be opened"
+    return
+  end if
+
+  write (io_unit, *) "# k_grid(ii), on_exchange(ii, 1), on_exchange(ii, 2)"
+  write (io_unit, *) "#           , calculated        , analytic          "
+  do ii = 1, n_k
+    write (io_unit, *) k_grid(ii), on_exchange(ii, 1), on_exchange(ii, 2)
+  end do
+
+  close(io_unit)
+
 end subroutine write_output
+
+! on_elements
+!
+! Numerically calculated and analytic on-shell elements of the direct and
+! exchange terms (for 1s -> ns transitions)
+subroutine on_elements (n_r, r_grid, r_weights, n_k, k_grid, &
+    n_b, wf, energies, i_f, on_direct, on_exchange, status)
+
+  use vmatrix
+  implicit none
+
+  integer , intent(in) :: n_r
+  double precision , intent(in) :: r_grid(n_r)
+  double precision , intent(in) :: r_weights(n_r)
+  integer , intent(in) :: n_k
+  double precision , intent(in) :: k_grid(n_k)
+  integer , intent(in) :: n_b
+  double precision , intent(in) :: wf(n_r, n_b)
+  double precision , intent(in) :: energies(n_b)
+  integer , intent(in) :: i_f
+  double precision , intent(out) :: on_direct(n_k, 2)
+  double precision , intent(out) :: on_exchange(n_k, 2)
+  integer , intent(out) :: status
+  ! local variables
+  double precision :: k_on, ki, energy
+  double precision :: k, k2, k4, k6
+  integer :: ii
+
+
+  ! check if arguments are valid
+  if ((n_r < 1) .or. (n_k < 1) .or. (n_b < 1)) then
+    status = 1
+    return
+  end if
+
+  ! iterate through momentum grid
+  do ii = 1, n_k
+    ki = k_grid(ii)
+
+    ! calculate on-shell energy
+    energy = energies(1) + (0.5d0 * (ki ** 2))
+
+    ! calculate on-shell momentum
+    k_on = sqrt(2d0*(energy - energies(i_f)))
+
+    write (*, *) "[debug] ki = ", ki
+    write (*, *) "[debug] energy = ", energy
+    write (*, *) "[debug] k_on = ", k_on
+
+    ! calculate on-shell direct term
+    call direct_matrix_element(n_r, r_grid, r_weights, &
+        (i_f == 1), wf(:, 1), wf(:, i_f), ki, k_on, on_direct(ii, 1), status)
+    if (status /= 0) return
+
+    ! calculate on-shell exchange term
+    call exchange_matrix_element(n_r, r_grid, r_weights, &
+        energy, wf(:, 1), wf(:, i_f), ki, k_on, on_exchange(ii, 1), status)
+    if (status /= 0) return
+
+    ! analytic on-shell direct term
+    ! (this was painful to write out)
+    k = ki
+    k2 = k**2
+    k4 = k**4
+    k6 = k**6
+    select case (i_f)
+    case (1)
+      on_direct(ii, 2) = - 0.25d0 * ((k2 / (k2+1d0)) + log(k2+1d0))
+      on_exchange(ii, 2) = - (k2 * (k2-3d0)) / ((k2+1d0)**3)
+
+    case (2)
+      on_direct(ii, 2) = &
+          (16d0/81d0) * k * (4d0*k2 + 3d0) * sqrt(8d0*k2 - 6d0) &
+          / ((4d0*k2 + 1d0)**2)
+      on_exchange(ii, 2) = &
+          (-16d0/9d0) * k * (16d0*k4 - 72d0*k2 + 13d0) * sqrt(8d0*k2 - 6d0) &
+          / ((4d0*k2 + 1d0)**4)
+
+    case (3)
+      on_direct(ii, 2) = &
+          (9d0*sqrt(3d0)/128d0) * k * (135d0*k4 + 87d0*k2 - 4d0) &
+          * sqrt(9d0*k2 - 8d0) / ((9d0*k2 + 1d0)**3)
+      on_exchange(ii, 2) = &
+          (-9d0*sqrt(3d0)/8d0) * k * (1701d0*k6 - 8208d0*k4 + 2325d0*k2 - 70d0)&
+          * sqrt(9d0*k2 - 8d0) / ((9d0*k2 + 1d0)**5)
+    end select
+
+    write (*, *) "[debug]"
+  end do
+
+end subroutine on_elements
