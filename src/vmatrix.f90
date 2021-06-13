@@ -23,8 +23,6 @@ contains
     double precision , intent(out) :: V_direct(n_k, n_k)
     integer , intent(out) :: status
     ! local variables
-    double precision :: f(n_r), g(n_r)
-    double precision :: k_i(n_r), k_f(n_r)
     integer :: ii, ff
 
     ! check if arguments are valid
@@ -64,9 +62,7 @@ contains
     double precision , intent(out) :: V_direct
     integer , intent(out) :: status
     ! local variables
-    ! double precision :: k_i(n_r), k_f(n_r)
     double precision :: f(n_r), g(n_r)
-    integer :: ii, ff
 
     ! check if arguments are valid
     if (n_r < 1) then
@@ -103,10 +99,6 @@ contains
     double precision , intent(out) :: V_exchange(n_k, n_k)
     integer , intent(out) :: status
     ! local variables
-    double precision :: v(n_r)
-    double precision :: a, b, c, d
-    double precision :: k_i(n_r), k_f(n_r)
-    double precision :: ki, kf
     integer :: ii, ff
 
     ! check if arguments are valid
@@ -144,10 +136,7 @@ contains
     integer , intent(out) :: status
     ! local variables
     double precision :: v(n_r)
-    double precision :: a, b, c, d
-    ! double precision :: k_i(n_r), k_f(n_r)
     double precision :: f(n_r), g(n_r)
-    integer :: ii, ff
 
     ! check if arguments are valid
     if (n_r < 1) then
@@ -167,19 +156,12 @@ contains
         - intg(f) * intg(v * g) &
         - two_e_integral(n_r, r_grid, r_weights, f, g)
 
-    ! a = (energy - (0.5d0 * ((kf ** 2) + (ki ** 2)))) * intg(f) * intg(g)
-    ! b = - intg(v * f) * intg(g)
-    ! c = - intg(f) * intg(v * g)
-    ! d = - two_e_integral(n_r, r_grid, r_weights, f, g)
-
-    ! V_exchange = a + b + c + d
-
   contains
 
     ! in-lining integrate() for compactness
-    double precision function intg (f)
-      double precision , intent(in) :: f(n_r)
-      intg = integrate(n_r, r_weights, f(:))
+    double precision function intg (func)
+      double precision , intent(in) :: func(n_r)
+      intg = integrate(n_r, r_weights, func(:))
     end function intg
 
   end subroutine exchange_matrix_element
@@ -203,6 +185,9 @@ contains
     double precision :: b(n_r)
     integer :: ii
 
+    ! initialise integral
+    integral = 0.0d0
+
     ! check if arguments are valid
     if (n_r < 1) then
       return
@@ -220,8 +205,7 @@ contains
     end do
 
     ! evaluate the integral
-    integral = integrate(n_r, r_weights, &
-        f(:) * ((a(:) / r_grid(:)) + b(:)))
+    integral = integrate(n_r, r_weights,  f(:) * ((a(:) / r_grid(:)) + b(:)))
 
   end function two_e_integral
 
@@ -239,13 +223,15 @@ contains
     ! local variables
     integer :: ii
 
+    ! initialise integral
+    integral = 0.0d0
+
     ! check if arguments are valid
     if (n_r < 1) then
       return
     end if
 
     ! evaluate the integral
-    integral = 0.0d0
     do ii = 1, n_r
       integral = integral + (r_weights(ii) * f(ii))
     end do

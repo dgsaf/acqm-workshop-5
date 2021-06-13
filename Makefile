@@ -56,9 +56,8 @@ INTELFORT = ifort
 GCCCFLAGS = -std=c11
 
 # fortran compilation flags
-# GCCFFLAGS = -cpp  -dM -ffixed-line-length-none \
-# 	-Wall -Wextra -Wconversion -pedantic -fcheck=all -fimplicit-none
-GCCFFLAGS = -cpp  -dM -ffixed-line-length-none
+GCCFFLAGS = -cpp  -dM -ffixed-line-length-none \
+	-Wall -Wextra -Wconversion -pedantic -fcheck=all -fimplicit-none
 INTELFFLAGS = -cpp -extend-source -D_INTELFTN
 
 # define cuda compilers
