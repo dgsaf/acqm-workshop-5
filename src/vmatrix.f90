@@ -34,31 +34,15 @@ contains
     end if
 
     ! initialise V_direct
-    V_direct(:, :) = 0d0
-
-    ! cache product of wavefunctions
-    g(:) = wf_i(:) * wf_f(:)
+    V_direct(:, :) = 0.0d0
 
     ! determine direct matrix elements numerically
     do ii = 1, n_k
-      k_i(:) = sin(k_grid(ii) * r_grid(:))
       do ff = 1, n_k
-        V_direct(ff, ii) = two_e_integral(n_r, r_grid, r_weights, &
-            sin(k_grid(ff) * r_grid(:)) * k_i(:), g)
+        call direct_matrix_element(n_r, r_grid, r_weights, delta_i_f, &
+            wf_i, wf_f, k_grid(ii), k_grid(ff), V_direct(ff, ii), status)
       end do
     end do
-
-    ! if i == f, then subtract (1/r) term
-    if (delta_i_f) then
-      do ii = 1, n_k
-        k_i(:) = sin(k_grid(ii) * r_grid(:))
-        do ff = 1, n_k
-          V_direct(ff, ii) = V_direct(ff, ii) &
-              - integrate(n_r, r_weights, &
-              (sin(k_grid(ff) * r_grid(:)) * k_i(:)) / r_grid(:))
-        end do
-      end do
-    end if
 
   end subroutine direct_matrix
 
@@ -80,8 +64,8 @@ contains
     double precision , intent(out) :: V_direct
     integer , intent(out) :: status
     ! local variables
+    ! double precision :: k_i(n_r), k_f(n_r)
     double precision :: f(n_r), g(n_r)
-    double precision :: k_i(n_r), k_f(n_r)
     integer :: ii, ff
 
     ! check if arguments are valid
@@ -90,18 +74,15 @@ contains
       return
     end if
 
-    ! cache product of wavefunctions
-    g(:) = wf_i(:) * wf_f(:)
-
     ! determine direct matrix elements numerically
-    k_i(:) = sin(ki * r_grid(:))
-    V_direct = two_e_integral(n_r, r_grid, r_weights, &
-        sin(kf * r_grid(:)) * k_i(:), g)
+    f(:) = sin(kf * r_grid(:)) * sin(ki * r_grid(:))
+    g(:) = wf_f(:) * wf_i(:)
+
+    V_direct = two_e_integral(n_r, r_grid, r_weights, f, g)
 
     ! if i == f, then subtract (1/r) term
     if (delta_i_f) then
-      V_direct = V_direct - &
-          integrate(n_r, r_weights, (sin(kf * r_grid(:)) * k_i(:)) / r_grid(:))
+      V_direct = V_direct - integrate(n_r, r_weights, f(:) / r_grid(:))
     end if
 
   end subroutine direct_matrix_element
@@ -135,42 +116,15 @@ contains
     end if
 
     ! initialise V_exchange
-    V_exchange(:, :) = 0d0
+    V_exchange(:, :) = 0.0d0
 
-    ! cache one-electron potential
-    v(:) = - 1d0 / r_grid(:)
-
-    ! determine exchange matrix elements numerically
+    ! determine direct matrix elements numerically
     do ii = 1, n_k
-      ki = k_grid(ii)
-      k_i(:) = sin(ki * r_grid(:))
-
       do ff = 1, n_k
-        kf = k_grid(ff)
-        k_f(:) = sin(kf * r_grid(:))
-
-        a = (energy - (0.5d0 * ((kf ** 2) + (ki ** 2)))) &
-            * intg(k_f(:) * wf_i(:)) * intg(wf_f(:) * k_i(:))
-
-        b = - intg(k_f(:) * v(:) * wf_i(:)) * intg(wf_f(:) * k_i(:))
-
-        c = - intg(k_f(:) * wf_i(:)) * intg(wf_f(:) * v(:) * k_i(:))
-
-        d = - two_e_integral(n_r, r_grid, r_weights, &
-            k_f(:) * wf_i(:), k_i(:) * wf_f(:))
-
-        V_exchange(ff, ii) = a + b + c + d
-
+        call exchange_matrix_element(n_r, r_grid, r_weights, energy, &
+            wf_i, wf_f, k_grid(ii), k_grid(ff), V_exchange(ff, ii), status)
       end do
     end do
-
-  contains
-
-    ! in-lining integrate() for compactness
-    double precision function intg (f)
-      double precision , intent(in) :: f(n_r)
-      intg = integrate(n_r, r_weights, f(:))
-    end function intg
 
   end subroutine exchange_matrix
 
@@ -191,7 +145,8 @@ contains
     ! local variables
     double precision :: v(n_r)
     double precision :: a, b, c, d
-    double precision :: k_i(n_r), k_f(n_r)
+    ! double precision :: k_i(n_r), k_f(n_r)
+    double precision :: f(n_r), g(n_r)
     integer :: ii, ff
 
     ! check if arguments are valid
@@ -201,23 +156,23 @@ contains
     end if
 
     ! cache one-electron potential
-    v(:) = - 1d0 / r_grid(:)
+    v(:) = - 1.0d0 / r_grid(:)
 
-    ! determine exchange matrix elements numerically
-    k_i(:) = sin(ki * r_grid(:))
-    k_f(:) = sin(kf * r_grid(:))
+    f(:) = sin(kf * r_grid(:)) * wf_i(:)
+    g(:) = sin(ki * r_grid(:)) * wf_f(:)
 
-    a = (energy - (0.5d0 * ((kf ** 2) + (ki ** 2)))) &
-        * intg(k_f(:) * wf_i(:)) * intg(wf_f(:) * k_i(:))
+    V_exchange = &
+        (energy - (0.5d0 * ((kf ** 2) + (ki ** 2)))) * intg(f) * intg(g) &
+        - intg(v * f) * intg(g) &
+        - intg(f) * intg(v * g) &
+        - two_e_integral(n_r, r_grid, r_weights, f, g)
 
-    b = - intg(k_f(:) * v(:) * wf_i(:)) * intg(wf_f(:) * k_i(:))
+    ! a = (energy - (0.5d0 * ((kf ** 2) + (ki ** 2)))) * intg(f) * intg(g)
+    ! b = - intg(v * f) * intg(g)
+    ! c = - intg(f) * intg(v * g)
+    ! d = - two_e_integral(n_r, r_grid, r_weights, f, g)
 
-    c = - intg(k_f(:) * wf_i(:)) * intg(wf_f(:) * v(:) * k_i(:))
-
-    d = - two_e_integral(n_r, r_grid, r_weights, &
-        k_f(:) * wf_i(:), k_i(:) * wf_f(:))
-
-    V_exchange = a + b + c + d
+    ! V_exchange = a + b + c + d
 
   contains
 
@@ -244,8 +199,8 @@ contains
     double precision , intent(in) :: g(n_r)
     double precision :: integral
     ! local variables
-    double precision :: a_1(n_r)
-    double precision :: a_2(n_r)
+    double precision :: a(n_r)
+    double precision :: b(n_r)
     integer :: ii
 
     ! check if arguments are valid
@@ -254,25 +209,19 @@ contains
     end if
 
     ! populate arrays
-    a_1(1) = r_weights(1) * g(1)
+    a(1) = r_weights(1) * g(1)
     do ii = 2, n_r
-      a_1(ii) = a_1(ii-1) + (r_weights(ii) * g(ii))
+      a(ii) = a(ii-1) + (r_weights(ii) * g(ii))
     end do
 
-    a_2(n_r) = (r_weights(n_r) * g(n_r)) / r_grid(n_r)
+    b(n_r) = (r_weights(n_r) * g(n_r)) / r_grid(n_r)
     do ii = n_r-1, 1, -1
-      a_2(ii) = a_2(ii+1) + ((r_weights(ii) * g(ii)) / r_grid(ii))
+      b(ii) = b(ii+1) + ((r_weights(ii) * g(ii)) / r_grid(ii))
     end do
 
     ! evaluate the integral
     integral = integrate(n_r, r_weights, &
-        f(:) * ((a_1(:) / r_grid(:)) + a_2(:)))
-
-    ! integral = 0d0
-    ! do ii = 1, n_r
-    !   integral = integral + &
-    !       (r_weights(ii) * f(ii) * ((a_1(ii) / r_grid(ii)) + a_2(ii)))
-    ! end do
+        f(:) * ((a(:) / r_grid(:)) + b(:)))
 
   end function two_e_integral
 
@@ -296,7 +245,7 @@ contains
     end if
 
     ! evaluate the integral
-    integral = 0d0
+    integral = 0.0d0
     do ii = 1, n_r
       integral = integral + (r_weights(ii) * f(ii))
     end do

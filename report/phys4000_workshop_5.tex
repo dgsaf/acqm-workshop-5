@@ -36,6 +36,460 @@
 \subsection{Implementation}
 \label{sec:implementation}
 
+We denote the hydrogen target states by $\ket{\phi_{i}}$, and we denote the
+electron projectile states by $\ket{\vb{k}}$ corresponding to continuum waves
+with energy $\tfrac{1}{2} k^{2}$, where $k = \lrnorm{\vb{k}}$.
+We shall work in the s-wave model; that is, we only consider target states
+with $\ell_{i} = 0$ and $m_{i} = 0$, and continuum states with
+\begin{equation*}
+  \braket{\vb{r}}{\vb{k}}
+  =
+  N_{k}
+  \sin\lr{r k}
+  .
+\end{equation*}
+Note that we shall neglect the normalisation constants $N_{k}$ henceforth.
+We calculate potential matrix elements of the form
+\begin{alignat*}{2}
+  V_{f, i}^{\lr{S}}\lr{k', k}
+  {}={}
+  &
+  \mel{k', \phi_{f}}{\hat{V}^{S}}{\phi_{i}, k}
+  \\
+  {}={}
+  &
+  \mel
+  {k', \phi_{f}}
+  {\hat{V} - \lr{-1}^{S}\lr{E- \hat{H}}\hat{P}_{r}}
+  {\phi_{i}, k}
+  \\
+  {}={}
+  &
+  \mel{k', \phi_{f}}{\hat{V}_{1} + \hat{V}_{1, 2}}{\phi_{i}, k}
+  -
+  \lr{-1}^{S}
+  \mel{k', \phi_{f}}{E - \hat{H}}{k, \phi_{i}}
+  \\
+  {}={}
+  &
+  D_{f, i}\lr{k', k}
+  -
+  \lr{-1}^{S}
+  X_{f, i}\lr{k', k}
+\end{alignat*}
+where $D_{f, i}\lr{k', k}$ is the direct matrix element, $X_{f, i}\lr{k', k}$ is
+the exchange matrix element, and where $\hat{V}_{1}$ is the electron-nuclear
+potential of the form
+\begin{equation*}
+  \hat{V}_{1}
+  =
+  -
+  \dfrac{1}{r_{1}}
+  ,
+\end{equation*}
+and where $\hat{V}_{1, 2}$ is the electron-electron potential of the form
+\begin{equation*}
+  \hat{V}_{1, 2}
+  =
+  \dfrac{1}{\lrnorm{\vb{r}_{1} - \vb{r}_{2}}}
+  =
+  \sum_{\lambda = 0}^{\infty}
+  \dfrac{4\pi}{2\lambda + 1}
+  \dfrac{r_{<}^{\lambda}}{r_{>}^{\lambda + 1}}
+  \sum_{\mu = -\lambda}^{\lambda}
+  Y_{\lambda}^{\mu}\lr{\Omega_{1}}
+  {Y_{\lambda}^{\mu}}^{*}\lr{\Omega_{2}}
+\end{equation*}
+where $r_{<} = \min\lr{r_{1}, r_{2}}$, $r_{>} = \max\lr{r_{1}, r_{2}}$,
+and where $Y_{\lambda}^{\mu}$ are the spherical harmonics.
+However, within the s-wave model this potential reduces to the form
+\begin{equation*}
+  \hat{V}_{1, 2}
+  =
+  \dfrac{1}{r_{>}}
+  =
+  \dfrac{1}{\max\lr{r_{1}, r_{2}}}
+  .
+\end{equation*}
+
+\subsubsection{Calculation of Direct Matrix Elements $D_{f, i}\lr{k', k}$}
+\label{sec:calc-dir-me}
+
+The direct matrix elements are of the form
+\begin{equation*}
+  D_{f, i}\lr{k', k}
+  =
+  \mel{k', \phi_{f}}{\hat{V}_{1} + \hat{V}_{1, 2}}{\phi_{i}, k}
+\end{equation*}
+where
+\begin{alignat*}{2}
+  \mel{k', \phi_{f}}{\hat{V}_{1}}{\phi_{i}, k}
+  {}={}
+  &
+  \mel{k'}{\hat{V}_{1}}{k}
+  \braket{\phi_{f}}{\phi_{i}}
+  \\
+  {}={}
+  &
+  -
+  \int_{0}^{\infty}
+  {
+    \dfrac{1}{r_{1}}
+    \sin\lr{k' r_{1}}
+    \sin\lr{k r_{1}}
+  }
+  \dd{r_{1}}
+  \int_{0}^{\infty}
+  {
+    \phi_{f}\lr{r_{2}}
+    \phi_{i}\lr{r_{2}}
+  }
+  \dd{r_{2}}
+  \\
+  {}={}
+  &
+  -
+  \int_{0}^{\infty}
+  {
+    \dfrac{1}{r_{1}}
+    \sin\lr{k' r_{1}}
+    \sin\lr{k r_{1}}
+  }
+  \dd{r_{1}}
+  \delta_{f, i}
+\end{alignat*}
+and where
+\begin{alignat*}{2}
+  \mel{k', \phi_{f}}{\hat{V}_{1, 2}}{\phi_{i}, k}
+  {}={}
+  &
+  \int_{0}^{\infty}
+  \int_{0}^{\infty}
+  {
+    \sin\lr{k' r_{1}}
+    \phi_{f}\lr{r_{2}}
+    \dfrac{1}{\max\lr{r_{1}, r_{2}}}
+    \sin\lr{k r_{1}}
+    \phi_{i}\lr{r_{2}}
+  }
+  \dd{r_{1}}
+  \dd{r_{2}}
+  \\
+  {}={}
+  &
+  \int_{0}^{\infty}
+  {
+    \sin\lr{k' r_{1}}
+    \sin\lr{k r_{1}}
+    \lr[\bigg]
+    {
+      \int_{0}^{\infty}
+      {
+        \dfrac{1}{\max\lr{r_{1}, r_{2}}}
+        \phi_{f}\lr{r_{2}}
+        \phi_{i}\lr{r_{2}}
+      }
+      \dd{r_{2}}
+    }
+  }
+  \dd{r_{1}}
+  \\
+  {}={}
+  &
+  \int_{0}^{\infty}
+  {
+    \sin\lr{k' r_{1}}
+    \sin\lr{k r_{1}}
+    \lr[\bigg]
+    {
+      \dfrac{1}{r_{1}}
+      \int_{0}^{r_{1}}
+      {
+        \phi_{f}\lr{r_{2}}
+        \phi_{i}\lr{r_{2}}
+      }
+      \dd{r_{2}}
+      +
+      \int_{r_{1}}^{\infty}
+      {
+        \dfrac{1}{r_{2}}
+        \phi_{f}\lr{r_{2}}
+        \phi_{i}\lr{r_{2}}
+      }
+      \dd{r_{2}}
+    }
+  }
+  \dd{r_{1}}
+  .
+\end{alignat*}
+
+\subsubsection{Calculation of Exchange Matrix Elements $X_{f, i}\lr{k', k}$}
+\label{sec:calc-exc-me}
+
+The exchange matrix elements are of the form
+\begin{alignat*}{2}
+  X_{f, i}\lr{k', k}
+  {}={}
+  &
+  \mel{k', \phi_{f}}{E - \hat{H}}{k, \phi_{i}}
+  \\
+  {}={}
+  &
+  \lr
+  {
+    E
+    -
+    \tfrac{1}{2} k'^{2}
+    -
+    \tfrac{1}{2} k^{2}
+  }
+  \braket{k'}{\phi_{i}}
+  \braket{\phi_{f}}{k}
+  \\
+  &
+  {}-{}
+  \mel{k'}{\hat{V}_{1}}{\phi_{i}}
+  \braket{\phi_{f}}{k}
+  -
+  \braket{k'}{\phi_{i}}
+  \mel{\phi_{f}}{\hat{V}_{2}}{k}
+  \\
+  &
+  {}-{}
+  \mel{k', \phi_{f}}{\hat{V}_{1, 2}}{k \phi_{i}}
+\end{alignat*}
+where the one-electron inner products are of the form
+\begin{equation*}
+  \braket{f}{g}
+  =
+  \int_{0}^{\infty}
+  {
+    f\lr{r}
+    g\lr{r}
+  }
+  \dd{r}
+\end{equation*}
+and where the two-electron inner product is of the form
+\begin{alignat*}{2}
+  \mel{k', \phi_{f}}{\hat{V}_{1, 2}}{k \phi_{i}}
+  {}={}
+  &
+  \int_{0}^{\infty}
+  \int_{0}^{\infty}
+  {
+    \sin\lr{k' r_{1}}
+    \phi_{f}\lr{r_{2}}
+    \dfrac{1}{\max\lr{r_{1}, r_{2}}}
+    \phi_{i}\lr{r_{1}}
+    \sin\lr{k r_{2}}
+  }
+  \dd{r_{1}}
+  \dd{r_{2}}
+  \\
+  {}={}
+  &
+  \int_{0}^{\infty}
+  {
+    \sin\lr{k' r_{1}}
+    \phi_{i}\lr{r_{1}}
+    \lr[\bigg]
+    {
+      \int_{0}^{\infty}
+      {
+        \dfrac{1}{\max\lr{r_{1}, r_{2}}}
+        \phi_{f}\lr{r_{2}}
+        \sin\lr{k r_{2}}
+      }
+      \dd{r_{2}}
+    }
+  }
+  \dd{r_{1}}
+  \\
+  {}={}
+  &
+  \int_{0}^{\infty}
+  {
+    \sin\lr{k' r_{1}}
+    \phi_{i}\lr{r_{1}}
+    \lr[\bigg]
+    {
+      \dfrac{1}{r_{1}}
+      \int_{0}^{r_{1}}
+      {
+        \phi_{f}\lr{r_{2}}
+        \sin\lr{k r_{2}}
+      }
+      \dd{r_{2}}
+      +
+      \int_{r_{1}}^{\infty}
+      {
+        \dfrac{1}{r_{2}}
+        \phi_{f}\lr{r_{2}}
+        \sin\lr{k r_{2}}
+      }
+      \dd{r_{2}}
+    }
+  }
+  \dd{r_{1}}
+  \\
+\end{alignat*}
+
+\subsubsection{Evaluation of Integrals}
+\label{sec:eval-int}
+
+We suppose that the radial functions are to be plotted on a radial grid of the
+form $\mathcal{R}_{n_{r}} = \lrset{k \delta_{r}}_{k = 1}^{n_{r}}$ for
+$n_{r} > 0$ and small $\delta_{r} > 0$, and with a corresponding set of weights
+$\mathcal{W}_{n_{r}} = \lrset{w_{k}}_{k = 1}^{n_{r}}$ such that
+\begin{equation*}
+  \int_{0}^{\infty}
+  {
+    f\lr{r}
+  }
+  \dd{r}
+  =
+  \lim_{n_{r} \to \infty}
+  \sum_{k = 1}^{n_{r}}
+  {
+    w_{k}
+    f\lr{r_{k}}
+  }
+  =
+  \lim_{n_{r} \to \infty}
+  \sum_{k = 1}^{n_{r}}
+  {
+    w_{k}
+    f_{k}
+  }
+  \approx
+  \sum_{k = 1}^{n_{r}}
+  {
+    w_{k}
+    f_{k}
+  }
+  .
+\end{equation*}
+The one-electron integrals, of the form $\braket{f}{g}$, are then
+evaluated in the following manner
+\begin{equation*}
+  \braket{f}{g}
+  =
+  \int_{0}^{\infty}
+  {
+    f\lr{r}
+    g\lr{r}
+  }
+  \dd{r}
+  \approx
+  \sum_{k = 1}^{n_{r}}
+  {
+    w_{k}
+    f_{k}
+    g_{k}
+  }
+  .
+\end{equation*}
+The two electron integrals $\bra{F} {} \ket{G}$ where
+\begin{equation*}
+  \bra{F} {} \ket{G}
+  =
+  \int_{0}^{\infty}
+  {
+    F\lr{r_{1}}
+    \lr[\bigg]
+    {
+      \dfrac{1}{r_{1}}
+      \int_{0}^{r_{1}}
+      {
+        G\lr{r_{2}}
+      }
+      \dd{r_{2}}
+      +
+      \int_{r_{1}}^{\infty}
+      {
+        \dfrac{1}{r_{2}}
+        G\lr{r_{2}}
+      }
+      \dd{r_{2}}
+    }
+  }
+  \dd{r_{1}}
+  ,
+\end{equation*}
+are evaluated in the following manner
+\begin{equation*}
+  \bra{F} {} \ket{G}
+  \approx
+  \sum_{k = 1}^{n_{r}}
+  {
+    w_{k}
+    F_{k}
+    \lr[\bigg]
+    {
+      \dfrac{1}{r_{k}}
+      A_{k}
+      +
+      B_{k}
+    }
+  }
+\end{equation*}
+where
+\begin{equation*}
+  A_{k}
+  =
+  \sum_{m = 1}^{k}
+  {
+    w_{m}
+    G_{m}
+  }
+  =
+  \begin{cases}
+    A_{k - 1}
+    +
+    w_{k}
+    G_{k}
+    &
+    \qq{for}
+    k = 2, \dotsc, n_{r}
+    \\
+    w_{k}
+    G_{k}
+    &
+    \qq{for}
+    k = 1
+  \end{cases}
+\end{equation*}
+and
+\begin{equation*}
+  B_{k}
+  =
+  \sum_{m = k}^{n_{r}}
+  {
+    \dfrac{1}{r_{m}}
+    w_{m}
+    G_{m}
+  }
+  =
+  \begin{cases}
+    B_{k + 1}
+    +
+    \tfrac{1}{r_{k}}
+    w_{k}
+    G_{k}
+    &
+    \qq{for}
+    k = 1, \dotsc, n_{r} - 1
+    \\
+    \tfrac{1}{r_{k}}
+    w_{k}
+    G_{k}
+    &
+    \qq{for}
+    k = n_{r}
+  \end{cases}
+  .
+\end{equation*}
+
 \subsection{Direct Matrix Elements}
 \label{sec:dir-me}
 

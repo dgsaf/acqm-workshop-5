@@ -56,13 +56,13 @@ program main
   write (*, *) "[debug] validating input"
 
   if (l < 0) status = 1
-  if (alpha < 0d0) status = 1
+  if (alpha < 0.0d0) status = 1
   if (n_b < 0) status = 1
-  if (d_r < 0d0) status = 1
-  if (r_max < 0d0) status = 1
-  if (d_k < 0d0) status = 1
-  if (k_max < 0d0) status = 1
-  if (energy < 0d0) status = 1
+  if (d_r < 0.0d0) status = 1
+  if (r_max < 0.0d0) status = 1
+  if (d_k < 0.0d0) status = 1
+  if (k_max < 0.0d0) status = 1
+  if (energy < 0.0d0) status = 1
   if (status /= 0) call exit(status)
 
   ! scale energy from eV to atomic units
@@ -102,8 +102,8 @@ program main
     r_grid(i_r) = d_r * i_r
   end do
 
-  r_weights(1:n_r:2) = 4d0 * (d_r / 3d0)
-  r_weights(2:n_r:2) = 2d0 * (d_r / 3d0)
+  r_weights(1:n_r:2) = 4.0d0 * (d_r / 3.0d0)
+  r_weights(2:n_r:2) = 2.0d0 * (d_r / 3.0d0)
 
   ! setup momentum grid
   write (*, *) "[debug] setting up momentum grid"
@@ -337,17 +337,31 @@ subroutine on_elements (n_r, r_grid, r_weights, n_k, k_grid, &
   end if
 
   ! iterate through momentum grid
+  write (*, *) "[debug] energies(i) = ", energies(1)
+  write (*, *) "[debug] energies(f) = ", energies(i_f)
+
   do ii = 1, n_k
     ki = k_grid(ii)
 
     ! calculate on-shell energy
     energy = energies(1) + (0.5d0 * (ki ** 2))
 
-    ! calculate on-shell momentum
-    k_on = sqrt(2d0*(energy - energies(i_f)))
-
     write (*, *) "[debug] ki = ", ki
     write (*, *) "[debug] energy = ", energy
+
+    ! handle impossible transition
+    if (energy < energies(i_f)) then
+      on_direct(ii, :) = 0.0d0
+      on_exchange(ii, :) = 0.0d0
+
+      write (*, *) "[debug] forbidden transition "
+      write (*, *)
+      cycle
+    end if
+
+    ! calculate on-shell momentum
+    k_on = sqrt(2.0d0*(energy - energies(i_f)))
+
     write (*, *) "[debug] k_on = ", k_on
 
     ! calculate on-shell direct term
@@ -368,24 +382,26 @@ subroutine on_elements (n_r, r_grid, r_weights, n_k, k_grid, &
     k6 = k**6
     select case (i_f)
     case (1)
-      on_direct(ii, 2) = - 0.25d0 * ((k2 / (k2+1d0)) + log(k2+1d0))
-      on_exchange(ii, 2) = - (k2 * (k2-3d0)) / ((k2+1d0)**3)
+      on_direct(ii, 2) = - 0.25d0 * ((k2 / (k2+1.0d0)) + log(k2+1.0d0))
+      on_exchange(ii, 2) = - (k2 * (k2-3.0d0)) / ((k2+1.0d0)**3)
 
     case (2)
       on_direct(ii, 2) = &
-          (16d0/81d0) * k * (4d0*k2 + 3d0) * sqrt(8d0*k2 - 6d0) &
-          / ((4d0*k2 + 1d0)**2)
+          (16.0d0/81.0d0) * k * (4.0d0*k2 + 3.0d0) * sqrt(8.0d0*k2 - 6.0d0) &
+          / ((4.0d0*k2 + 1.0d0)**2)
       on_exchange(ii, 2) = &
-          (-16d0/9d0) * k * (16d0*k4 - 72d0*k2 + 13d0) * sqrt(8d0*k2 - 6d0) &
-          / ((4d0*k2 + 1d0)**4)
+          (-16.0d0/9.0d0) * k * (16.0d0*k4 - 72.0d0*k2 + 13.0d0) &
+          * sqrt(8.0d0*k2 - 6.0d0) &
+          / ((4.0d0*k2 + 1.0d0)**4)
 
     case (3)
       on_direct(ii, 2) = &
-          (9d0*sqrt(3d0)/128d0) * k * (135d0*k4 + 87d0*k2 - 4d0) &
-          * sqrt(9d0*k2 - 8d0) / ((9d0*k2 + 1d0)**3)
+          (9.0d0*sqrt(3.0d0)/128.0d0) * k * (135.0d0*k4 + 87.0d0*k2 - 4.0d0) &
+          * sqrt(9.0d0*k2 - 8.0d0) / ((9.0d0*k2 + 1.0d0)**3)
       on_exchange(ii, 2) = &
-          (-9d0*sqrt(3d0)/8d0) * k * (1701d0*k6 - 8208d0*k4 + 2325d0*k2 - 70d0)&
-          * sqrt(9d0*k2 - 8d0) / ((9d0*k2 + 1d0)**5)
+          (-9.0d0*sqrt(3.0d0)/8.0d0) * k &
+          * (1701.0d0*k6 - 8208.0d0*k4 + 2325.0d0*k2 - 70.0d0)&
+          * sqrt(9.0d0*k2 - 8.0d0) / ((9.0d0*k2 + 1.0d0)**5)
     end select
 
     write (*, *) "[debug]"
