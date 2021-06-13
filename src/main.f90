@@ -329,6 +329,9 @@ subroutine on_elements (n_r, r_grid, r_weights, n_k, k_grid, &
   double precision :: k, k2, k4, k6
   integer :: ii
 
+  ! initialise on_*
+  on_direct(:, :) = 0.0d0
+  on_exchange(:, :) = 0.0d0
 
   ! check if arguments are valid
   if ((n_r < 1) .or. (n_k < 1) .or. (n_b < 1)) then
@@ -351,9 +354,6 @@ subroutine on_elements (n_r, r_grid, r_weights, n_k, k_grid, &
 
     ! handle impossible transition
     if (energy < energies(i_f)) then
-      on_direct(ii, :) = 0.0d0
-      on_exchange(ii, :) = 0.0d0
-
       write (*, *) "[debug] forbidden transition "
       write (*, *)
       cycle
@@ -400,7 +400,7 @@ subroutine on_elements (n_r, r_grid, r_weights, n_k, k_grid, &
           * sqrt(9.0d0*k2 - 8.0d0) / ((9.0d0*k2 + 1.0d0)**3)
       on_exchange(ii, 2) = &
           (-9.0d0*sqrt(3.0d0)/8.0d0) * k &
-          * (1701.0d0*k6 - 8208.0d0*k4 + 2325.0d0*k2 - 70.0d0)&
+          * (1701.0d0*k6 - 8208.0d0*k4 + 2325.0d0*k2 - 70.0d0) &
           * sqrt(9.0d0*k2 - 8.0d0) / ((9.0d0*k2 + 1.0d0)**5)
     end select
 

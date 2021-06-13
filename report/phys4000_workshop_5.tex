@@ -30,6 +30,11 @@
 
 \clearpage
 
+The entire code repository used to calculate the data for this report can be
+found at \url{https://github.com/dgsaf/acqm-workshop-5}.
+Note that \autoref{sec:reduced-ccc-code} has not yet been attempted - it may be
+at a later date if time permits.
+
 \section{e-H V-Matrix}
 \label{sec:e-h-v-matrix}
 
@@ -338,9 +343,9 @@ and where the two-electron inner product is of the form
 \label{sec:eval-int}
 
 We suppose that the radial functions are to be plotted on a radial grid of the
-form $\mathcal{R}_{n_{r}} = \lrset{k \delta_{r}}_{k = 1}^{n_{r}}$ for
+form $\mathcal{R} = \lrset{k \delta_{r}}_{k = 1}^{n_{r}}$ for
 $n_{r} > 0$ and small $\delta_{r} > 0$, and with a corresponding set of weights
-$\mathcal{W}_{n_{r}} = \lrset{w_{k}}_{k = 1}^{n_{r}}$ such that
+$\mathcal{W} = \lrset{w_{k}}_{k = 1}^{n_{r}}$ such that
 \begin{equation*}
   \int_{0}^{\infty}
   {
@@ -490,35 +495,47 @@ and
   .
 \end{equation*}
 
+\clearpage
+
+For these calculations, we have used: a radial grid of the form
+$\mathcal{R} = \lrset{i \delta_{r}}_{i = 1}^{n_{r}}$, with
+$\delta_{r} = 0.01$ and $\max\lr{\mathcal{R}} = 100$,
+and a momentum grid of the form
+$\mathcal{K} = \lrset{i \delta_{k}}_{i = 1}^{n_{k}}$, with
+$\delta_{k} = 0.025$ and $\max\lr{\mathcal{K}} = 5$.
+
 \subsection{Direct Matrix Elements}
 \label{sec:dir-me}
 
 \begin{figure}[h]
   \begin{center}
-    \input{figure_1s_1s_dir.tex}
+    \input{figure_10_1s_1s_dir.tex}
   \end{center}
   \caption[Direct Matrix Elements 1s-1s]{
-    ...
+    The $D_{f, i}\lr{k', k}$ direct matrix elements (shown in red) are presented
+    for the $1s \to 1s$ transition, with $E = \SI{10}{\eV}$.
   }
   \label{fig:dir-me-1s-1s}
 \end{figure}
 
 \begin{figure}[h]
   \begin{center}
-    \input{figure_1s_2s_dir.tex}
+    \input{figure_10_1s_2s_dir.tex}
   \end{center}
   \caption[Direct Matrix Elements 1s-2s]{
-    ...
+    The $D_{f, i}\lr{k', k}$ direct matrix elements (shown in red) are presented
+    for the $1s \to 2s$ transition, with $E = \SI{10}{\eV}$.
   }
   \label{fig:dir-me-1s-2s}
 \end{figure}
 
 \begin{figure}[h]
   \begin{center}
-    \input{figure_1s_3s_dir.tex}
+    \input{figure_10_1s_3s_dir.tex}
   \end{center}
   \caption[Direct Matrix Elements 1s-3s]{
-    ...
+    The $D_{f, i}\lr{k', k}$ direct matrix elements (shown in red) are presented
+    for the $1s \to 3s$ transition, with $E = \SI{10}{\eV}$.
   }
   \label{fig:dir-me-1s-3s}
 \end{figure}
@@ -528,32 +545,76 @@ and
 \subsection{Exchange Matrix Elements}
 \label{sec:exc-me}
 
+\subsubsection{$X_{f, i}\lr{k', k}$ for $E = \SI{10}{\eV}$}
+\label{sec:exc-me-10}
+
 \begin{figure}[h]
   \begin{center}
-    \input{figure_1s_1s_exc.tex}
+    \input{figure_10_1s_1s_exc.tex}
   \end{center}
   \caption[Exchange Matrix Elements 1s-1s]{
-    ...
+    The $X_{f, i}\lr{k', k}$ exchange matrix elements (shown in blue) are
+    presented for the $1s \to 1s$ transition, with $E = \SI{10}{\eV}$.
   }
   \label{fig:exc-me-1s-1s}
 \end{figure}
 
 \begin{figure}[h]
   \begin{center}
-    \input{figure_1s_2s_exc.tex}
+    \input{figure_10_1s_2s_exc.tex}
   \end{center}
   \caption[Exchange Matrix Elements 1s-2s]{
-    ...
+    The $X_{f, i}\lr{k', k}$ exchange matrix elements (shown in blue) are
+    presented for the $1s \to 2s$ transition, with $E = \SI{10}{\eV}$.
   }
   \label{fig:exc-me-1s-2s}
 \end{figure}
 
 \begin{figure}[h]
   \begin{center}
-    \input{figure_1s_3s_exc.tex}
+    \input{figure_10_1s_3s_exc.tex}
   \end{center}
   \caption[Exchange Matrix Elements 1s-3s]{
-    ...
+    The $X_{f, i}\lr{k', k}$ exchange matrix elements (shown in blue) are
+    presented for the $1s \to 3s$ transition, with $E = \SI{10}{\eV}$.
+  }
+  \label{fig:exc-me-1s-3s}
+\end{figure}
+
+\clearpage
+
+\subsubsection{$X_{f, i}\lr{k', k}$ for $E = \SI{1}{\eV}$}
+\label{sec:exc-me-1}
+
+\begin{figure}[h]
+  \begin{center}
+    \input{figure_1_1s_1s_exc.tex}
+  \end{center}
+  \caption[Exchange Matrix Elements 1s-1s]{
+    The $X_{f, i}\lr{k', k}$ exchange matrix elements (shown in blue) are
+    presented for the $1s \to 1s$ transition, with $E = \SI{1}{\eV}$.
+  }
+  \label{fig:exc-me-1s-1s}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{center}
+    \input{figure_1_1s_2s_exc.tex}
+  \end{center}
+  \caption[Exchange Matrix Elements 1s-2s]{
+    The $X_{f, i}\lr{k', k}$ exchange matrix elements (shown in blue) are
+    presented for the $1s \to 2s$ transition, with $E = \SI{1}{\eV}$.
+  }
+  \label{fig:exc-me-1s-2s}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{center}
+    \input{figure_1_1s_3s_exc.tex}
+  \end{center}
+  \caption[Exchange Matrix Elements 1s-3s]{
+    The $X_{f, i}\lr{k', k}$ exchange matrix elements (shown in blue) are
+    presented for the $1s \to 3s$ transition, with $E = \SI{1}{\eV}$.
   }
   \label{fig:exc-me-1s-3s}
 \end{figure}
@@ -563,32 +624,100 @@ and
 \subsection{On-Shell Matrix Elements}
 \label{sec:on-me}
 
+For the transisiton $[i \to f]$, the on-shell energy is of the form
+\begin{equation*}
+  \epsilon_{i}
+  +
+  \dfrac{1}{2}
+  k^{2}
+  =
+  E
+  =
+  \epsilon_{f}
+  +
+  \dfrac{1}{2}
+  k'^{2}
+\end{equation*}
+whence the on-shell value for $k'$ is defined by
+\begin{equation*}
+  \dfrac{1}{2}
+  k'^{2}
+  =
+  E
+  -
+  \epsilon_{f}
+  =
+  \dfrac{1}{2}
+  k^{2}
+  +
+  \epsilon_{i}
+  -
+  \epsilon_{f}
+\end{equation*}
+where for the case of a hydrogen target, with
+$\epsilon_{n} = -\tfrac{1}{2n^{2}}$, and $i = 1$, we have have that
+\begin{equation*}
+  k'
+  =
+  \sqrt
+  {
+    k^{2}
+    -
+    \dfrac{f^{2} - 1}{f^{2}}
+  }
+  .
+\end{equation*}
+Note that transitions are forbidden for
+\begin{equation*}
+  k^{2}
+  <
+  \dfrac{f^{2} - 1}{f^{2}}
+  =
+  1
+  -
+  \dfrac{1}{f^{2}}
+  .
+\end{equation*}
+
 \begin{figure}[h]
   \begin{center}
-    \input{figure_1s_1s_on.tex}
+    \input{figure_10_1s_1s_on.tex}
   \end{center}
   \caption[On-Shell Matrix Elements 1s-1s]{
-    ...
+    The $D_{f, i}\lr{k', k}$ direct and $X_{f, i}\lr{k', k}$ exchange on-shell
+    matrix elements (shown in red and blue respectively) are presented for the
+    $1s \to 1s$ transition, and are compared with their respective analytic
+    expressions (shown in black).
   }
   \label{fig:on-me-1s-1s}
 \end{figure}
 
 \begin{figure}[h]
   \begin{center}
-    \input{figure_1s_2s_on.tex}
+    \input{figure_10_1s_2s_on.tex}
   \end{center}
   \caption[On-Shell Matrix Elements 1s-2s]{
-    ...
+    The $D_{f, i}\lr{k', k}$ direct and $X_{f, i}\lr{k', k}$ exchange on-shell
+    matrix elements (shown in red and blue respectively) are presented for the
+    $1s \to 2s$ transition, and are compared with their respective analytic
+    expressions (shown in black).
+    Note that the numerically calculated and analytic expressions differ by a
+    phase of $\lr{-1}$ (which remains a puzzle to me).
   }
   \label{fig:on-me-1s-2s}
 \end{figure}
 
 \begin{figure}[h]
   \begin{center}
-    \input{figure_1s_3s_on.tex}
+    \input{figure_10_1s_3s_on.tex}
   \end{center}
   \caption[On-Shell Matrix Elements 1s-3s]{
-    ...
+    The $D_{f, i}\lr{k', k}$ direct and $X_{f, i}\lr{k', k}$ exchange on-shell
+    matrix elements (shown in red and blue respectively) are presented for the
+    $1s \to 3s$ transition, and are compared with their respective analytic
+    expressions (shown in black).
+    Note that the numerically calculated and analytic expressions differ by a
+    phase of $\lr{-1}$ (which remains a puzzle to me).
   }
   \label{fig:on-me-1s-3s}
 \end{figure}
@@ -597,6 +726,294 @@ and
 
 \section{$V_{1 2}$ Potential in S-Wave Model}
 \label{sec:v12-swave}
+
+We note that the general form for a continuum wave
+$\ket{\vb{k}} = \ket{k, \ell, m}$ is
+\begin{equation*}
+  \braket{\vb{r}}{\vb{k}}
+  =
+  \dfrac{1}{r}
+  u_{\ell}\lr{r; k}
+  Y_{\ell}^{m}\lr{\Omega}
+  ,
+\end{equation*}
+and that the general form for the hydrogen target states
+$\ket{\phi_{i}} = \ket{\phi_{n_{i}, \ell_{i}, m_{i}}}$ is
+\begin{equation*}
+  \braket{\vb{r}}{\phi_{i}}
+  =
+  \dfrac{1}{r}
+  \phi_{i}\lr{r}
+  Y_{\ell_{i}}^{m_{i}}\lr{\Omega}
+  .
+\end{equation*}
+Recall that the electron-electron potential is of the form
+\begin{equation*}
+  \hat{V}_{1, 2}
+  =
+  \dfrac{1}{\lrnorm{\vb{r}_{1} - \vb{r}_{2}}}
+  =
+  \sum_{\lambda = 0}^{\infty}
+  \dfrac{4\pi}{2\lambda + 1}
+  \dfrac{r_{<}^{\lambda}}{r_{>}^{\lambda + 1}}
+  \sum_{\mu = -\lambda}^{\lambda}
+  Y_{\lambda}^{\mu}\lr{\Omega_{1}}
+  {Y_{\lambda}^{\mu}}^{*}\lr{\Omega_{2}}
+\end{equation*}
+where $r_{<} = \min\lr{r_{1}, r_{2}}$, $r_{>} = \max\lr{r_{1}, r_{2}}$,
+and where $Y_{\lambda}^{\mu}$ are the spherical harmonics.
+We now consider the form of the two-electron term in
+$D_{f, i}\lr{\vb{k}', \vb{k}}$,
+\begin{equation*}
+  \mel{\vb{k}', \phi_{f}}{\hat{V}_{1, 2}}{\phi_{i}, \vb{k}}
+  =
+  \int
+  \int
+  {
+    \braket{\vb{r}_{1}}{\vb{k}'}^{*}
+    \braket{\vb{r}_{2}}{\phi_{f}}^{*}
+    \dfrac{1}{\lrnorm{\vb{r}_{1} - \vb{r}_{2}}}
+    \braket{\vb{r}_{1}}{\vb{k}}
+    \braket{\vb{r}_{2}}{\phi_{i}}
+  }
+  \dd{\vb{r}_{1}}
+  \dd{\vb{r}_{2}}
+\end{equation*}
+for which the partial wave expansion is of the form
+\begin{alignat*}{3}
+  &
+  \mel{\vb{k}', \phi_{f}}{\hat{V}_{1, 2}}{\phi_{i}, \vb{k}}
+  &{}={}&
+  \sum_{\lambda = 0}^{\infty}
+  \dfrac{4\pi}{2\lambda + 1}
+  \sum_{\mu = -\lambda}^{\lambda}
+  &&
+  \int_{0}^{\infty}
+  \int_{0}^{\infty}
+  {
+    \dfrac{u_{\ell'}\lr{r_{1}; k'}}{r_{1}}
+    \dfrac{\phi_{f}\lr{r_{2}}}{r_{2}}
+    \dfrac{r_{<}^{\lambda}}{r_{>}^{\lambda + 1}}
+    \dfrac{\phi_{i}\lr{r_{2}}}{r_{2}}
+    \dfrac{u_{\ell}\lr{r_{1}; k}}{r_{1}}
+  }
+  r_{1}^{2}
+  r_{2}^{2}
+  \dd{r_{1}}
+  \dd{r_{2}}
+  \\
+  &
+  {}
+  &&
+  {}
+  &&
+  {}\times{}
+  \int_{S^{2}}
+  {
+    {Y_{\ell'}^{m'}}^{*}\lr{\Omega_{1}}
+    Y_{\lambda}^{\mu}\lr{\Omega_{1}}
+    Y_{\ell}^{m}\lr{\Omega_{1}}
+  }
+  \dd{\Omega_{1}}
+  \\
+  &
+  {}
+  &&
+  {}
+  &&
+  {}\times{}
+  \int_{S^{2}}
+  {
+    {Y_{\ell_{f}}^{m_{f}}}^{*}\lr{\Omega_{2}}
+    {Y_{\lambda}^{\mu}}^{*}\lr{\Omega_{2}}
+    Y_{\ell_{i}}^{m_{i}}\lr{\Omega_{2}}
+  }
+  \dd{\Omega_{2}}
+  \\
+  &
+  {}
+  &{}={}&
+  \sum_{\lambda = 0}^{\infty}
+  \dfrac{4\pi}{2\lambda + 1}
+  \sum_{\mu = -\lambda}^{\lambda}
+  &&
+  \int_{0}^{\infty}
+  \int_{0}^{\infty}
+  {
+    u_{\ell'}\lr{r_{1}; k'}
+    \phi_{f}\lr{r_{2}}
+    \dfrac{r_{<}^{\lambda}}{r_{>}^{\lambda + 1}}
+    \phi_{i}\lr{r_{2}}
+    u_{\ell}\lr{r_{1}; k}
+  }
+  \dd{r_{1}}
+  \dd{r_{2}}
+  \\
+  &
+  {}
+  &&
+  {}
+  &&
+  {}\times{}
+  \int_{S^{2}}
+  {
+    {Y_{\ell'}^{m'}}^{*}\lr{\Omega_{1}}
+    Y_{\lambda}^{\mu}\lr{\Omega_{1}}
+    Y_{\ell}^{m}\lr{\Omega_{1}}
+  }
+  \dd{\Omega_{1}}
+  \\
+  &
+  {}
+  &&
+  {}
+  &&
+  {}\times{}
+  \int_{S^{2}}
+  {
+    {Y_{\ell_{f}}^{m_{f}}}^{*}\lr{\Omega_{2}}
+    {Y_{\lambda}^{\mu}}^{*}\lr{\Omega_{2}}
+    Y_{\ell_{i}}^{m_{i}}\lr{\Omega_{2}}
+  }
+  \dd{\Omega_{2}}
+  .
+\end{alignat*}
+However, in the s-wave model, we have that that all $\ell, m$ terms (for the
+continuum wave) are zero, where therefore all
+$Y_{\ell}^{m}\lr{\Omega} = Y_{0}^{0}\lr{\Omega} = \tfrac{1}{\sqrt{4\pi}}$.
+It then follows that
+\begin{equation*}
+  \int_{S^{2}}
+  {
+    {Y_{\ell'}^{m'}}^{*}\lr{\Omega_{1}}
+    Y_{\lambda}^{\mu}\lr{\Omega_{1}}
+    Y_{\ell}^{m}\lr{\Omega_{1}}
+  }
+  \dd{\Omega_{1}}
+  =
+  \dfrac{1}{\sqrt{4 \pi}}
+  \int_{S^{2}}
+  {
+    {Y_{\ell'}^{m'}}^{*}\lr{\Omega_{1}}
+    Y_{\lambda}^{\mu}\lr{\Omega_{1}}
+  }
+  \dd{\Omega_{1}}
+  =
+  \dfrac{1}{\sqrt{4 \pi}}
+  \delta_{\ell', \lambda}
+  \delta_{m', \mu}
+\end{equation*}
+and as $\ell', m' = 0$, the only non-zero term in the sum is where
+$\lambda = \mu = 0$.
+Whence, we have that
+\begin{alignat*}{3}
+  &
+  \mel{\vb{k}', \phi_{f}}{\hat{V}_{1, 2}}{\phi_{i}, \vb{k}}
+  &{}={}&
+  \sqrt{4\pi}
+  &&
+  \int_{0}^{\infty}
+  \int_{0}^{\infty}
+  {
+    u_{\ell'}\lr{r_{1}; k'}
+    \phi_{f}\lr{r_{2}}
+    \dfrac{r_{<}^{0}}{r_{>}^{1}}
+    \phi_{i}\lr{r_{2}}
+    u_{\ell}\lr{r_{1}; k}
+  }
+  \dd{r_{1}}
+  \dd{r_{2}}
+  \\
+  &
+  {}
+  &&
+  {}
+  &&
+  {}\times{}
+  \int_{S^{2}}
+  {
+    {Y_{\ell_{f}}^{m_{f}}}^{*}\lr{\Omega_{2}}
+    {Y_{0}^{0}}^{*}\lr{\Omega_{2}}
+    Y_{\ell_{i}}^{m_{i}}\lr{\Omega_{2}}
+  }
+  \dd{\Omega_{2}}
+  \\
+  &
+  {}
+  &{}={}&
+  &&
+  \int_{0}^{\infty}
+  \int_{0}^{\infty}
+  {
+    u_{\ell'}\lr{r_{1}; k'}
+    \phi_{f}\lr{r_{2}}
+    \dfrac{1}{r_{>}}
+    \phi_{i}\lr{r_{2}}
+    u_{\ell}\lr{r_{1}; k}
+  }
+  \dd{r_{1}}
+  \dd{r_{2}}
+  \\
+  &
+  {}
+  &&
+  {}
+  &&
+  {}\times{}
+  \int_{S^{2}}
+  {
+    {Y_{\ell_{f}}^{m_{f}}}^{*}\lr{\Omega_{2}}
+    Y_{\ell_{i}}^{m_{i}}\lr{\Omega_{2}}
+  }
+  \dd{\Omega_{2}}
+  \\
+  &
+  {}
+  &{}={}&
+  &&
+  \int_{0}^{\infty}
+  \int_{0}^{\infty}
+  {
+    u_{\ell'}\lr{r_{1}; k'}
+    \phi_{f}\lr{r_{2}}
+    \dfrac{1}{r_{>}}
+    \phi_{i}\lr{r_{2}}
+    u_{\ell}\lr{r_{1}; k}
+  }
+  \dd{r_{1}}
+  \dd{r_{2}}
+  \\
+  &
+  {}
+  &&
+  {}
+  &&
+  {}\times{}
+  \delta_{\ell_{f}, \ell_{i}}
+  \delta_{m_{f}, m_{i}}
+\end{alignat*}
+and so we may restrict our attention to the case where
+$\ell_{f} = \ell_{i}$ and $m_{f} = m_{i}$; that is, where the angular momentum
+of the target is left unchanged.
+Finally, we have that
+\begin{equation*}
+  \mel{\vb{k}', \phi_{f}}{\hat{V}_{1, 2}}{\phi_{i}, \vb{k}}
+  =
+  \mel{k', \phi_{f}}{\hat{V}_{1, 2}}{\phi_{i}, k}
+  =
+  \int_{0}^{\infty}
+  \int_{0}^{\infty}
+  {
+    u_{\ell'}\lr{r_{1}; k'}
+    \phi_{f}\lr{r_{2}}
+    \dfrac{1}{r_{>}}
+    \phi_{i}\lr{r_{2}}
+    u_{\ell}\lr{r_{1}; k}
+  }
+  \dd{r_{1}}
+  \dd{r_{2}}
+\end{equation*}
+yielding the result as required.
 
 \section{Reduced CCC Code}
 \label{sec:reduced-ccc-code}
