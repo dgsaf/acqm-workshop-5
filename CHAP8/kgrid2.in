@@ -1,4 +1,4 @@
-54.4232,-1,0,5,1.0         ENERGY, NZE, NATOP, NPS, ALPHA
+54.4232,-1,1,5,1.0         ENERGY, NZE, NATOP, NPS, ALPHA
 1,10,1,1,0,0.0             NUNIT, NNBTOP, NENT, IFIRST, NOLD, THETA
 -1,8.0,200.0,0.0           NQM, QCUT, RMAX, SLOWE
 4,0.9,2,2.0,1,4.0,4,0.5    (NK(I),SK(I),I=1,4) K grid parameters
@@ -16,7 +16,7 @@ NUNIT  is 1 for the totalcs file having cross sections in a0**2,
        is 3 for the totalcs file having cross sections in cm**2
        is 0 for this file not being created
 NNBTOP principle quantum number of eigenstates used to form the overlaps
-       with the pseudostates. 
+       with the pseudostates.
 NENT   Number of incident channels for which the data is to be calculated
 IFIRST is 0 for direct only, and 1 with exchange
 NOLD   0 for exact states, 1 for pseudostates
@@ -27,7 +27,7 @@ RMAX   largest value of r
 SLOWE  if non-zero then the ALPHA is adjusted so that one of the pseudostate
        energies comes out to be SLOWE
 14,0.9,22,3.0,4,4.0,4,0.2 (NK(I),SK(I),I=1,4) K grid parameters
-K grid parameters as above imply 10 points within 0.2 of the channel on-shell 
-       point, 14 points spread between 0.0 and 0.9, 22 points between 
+K grid parameters as above imply 10 points within 0.2 of the channel on-shell
+       point, 14 points spread between 0.0 and 0.9, 22 points between
        0.9 and 3.0, and 4 points after 3.0 with
-       a transformation that assumes fall off as 1/k**4.0. 
+       a transformation that assumes fall off as 1/k**4.0.
