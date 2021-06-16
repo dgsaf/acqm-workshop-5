@@ -19,9 +19,9 @@ set ylabel "Matrix Elements"
 set xrange [0:*]
 set yrange [-0.5:0.5]
 
-set format x "\\scriptsize %.0f"
-set format y "\\scriptsize %.2f"
-set key width -3.5 spacing 0.8 height +0.6
+set format x "\\scriptsize %.1f"
+set format y "\\scriptsize %.1f"
+set key width -7.5 spacing 0.8 height +0.6
 
 # figure(s): on-shell matrix element plot for each (1s -> ns) transition
 do for [th = 0:2] {
@@ -34,11 +34,11 @@ do for [th = 0:2] {
   plot \
     for [k=1:2] \
       triplet(k,th) using 1:2 smooth unique \
-      title sprintf("\\scriptsize $K(k', k)$, k-grid %i", k) \
+      title sprintf("\\scriptsize $K(k)$, k-grid %i", k) \
       with lines palette frac (0.0+((k-1.0)/1.0)) , \
     for [k=1:2] \
       triplet(k,th) using 1:3 smooth unique \
-      title sprintf("\\scriptsize $V(k', k)$, k-grid %i", k) \
+      title sprintf("\\scriptsize $V(k)$, k-grid %i", k) \
       with lines palette frac (0.0+((k-1.0)/1.0)) dashtype 2
 
   set output
