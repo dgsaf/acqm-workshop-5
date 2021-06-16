@@ -100,6 +100,7 @@ for en in ${en_set} ; do
             | awk -F, '{if ($2) print $2;}' \
             | tr -s '\n' ' ')
 
+    # if empty, set to zero
     if [ -z "${tcs}" ] ; then
       tcs="0.0 0.0 0.0"
     fi
