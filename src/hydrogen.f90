@@ -64,6 +64,13 @@ contains
       end do
     end do
 
+    ! re-orient wavefunctions to be initially positive
+    do jj = 1, n_b
+      if (wf(1, jj) < 0.0d0) then
+        wf(:, jj) = - wf(:, jj)
+      end if
+    end do
+
   end subroutine hydrogen_wf
 
   ! radial_basis
