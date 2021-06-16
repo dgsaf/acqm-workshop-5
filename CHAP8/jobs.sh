@@ -53,7 +53,6 @@ done
 # energy set
 en_set=$(echo {1..100..1})
 
-echo ${en_set}
 for en in ${en_set} ; do
   echo ""
   echo "energy: ${en}"
@@ -83,4 +82,28 @@ for en in ${en_set} ; do
   mv -v singlet* ${dir}
   mv -v triplet* ${dir}
   mv -v totalcs ${dir}
+done
+
+# extract cross sections from energy jobs
+tcs_file="./data/book/tcs.txt"
+for en in ${en_set} ; do
+  echo ""
+  echo "energy: ${en}"
+
+  file="./data/book/${en}/totalcs"
+
+  echo "extracting cross sections"
+  for n in {1..5} ; do
+    # extract (S=0,S=1,S averaged) tcs for `ns <- 1s` transition
+    tcs=$(grep -e "${n}S <- 1S [^0-9]" ${file} \
+            | sed "s/^[ ]*// ; s/ <- /<-/g ; s/ [ ]*/,/g" \
+            | awk -F, '{if ($2) print $2;}' \
+            | tr -s '\n' ' ')
+
+    if [ -z "${tcs}" ] ; then
+      tcs="0.0 0.0 0.0"
+    fi
+
+    echo "${en}.0 ${tcs}" >> "./data/book/tcs_${n}s.txt"
+  done
 done
